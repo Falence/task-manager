@@ -25,7 +25,7 @@ func loadAppConfig() {
 		log.Fatalf("[loadConfig]: %s\n", err)
 	}
 	defer file.Close()
-	
+
 	AppConfig = configuration{}
 	err = json.NewDecoder(file).Decode(&AppConfig)
 	if err != nil {

@@ -2,9 +2,9 @@ package routers
 
 import (
 	"github.com/codegangsta/negroni"
-	"github.com/gorilla/mux"
 	"github.com/falence/taskmanager/common"
 	"github.com/falence/taskmanager/controllers"
+	"github.com/gorilla/mux"
 )
 
 func SetNoteRoutes(router *mux.Router) *mux.Router {

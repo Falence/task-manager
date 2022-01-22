@@ -13,10 +13,10 @@ func GetSession() *mgo.Session {
 	if session == nil {
 		var err error
 		session, err = mgo.DialWithInfo(&mgo.DialInfo{
-			Addrs: []string{AppConfig.MongoDBHost},
+			Addrs:    []string{AppConfig.MongoDBHost},
 			Username: AppConfig.DBUser,
 			Password: AppConfig.DBPwd,
-			Timeout: 60 * time.Second,
+			Timeout:  60 * time.Second,
 		})
 		if err != nil {
 			log.Fatalf("[GetSession]: %s\n", err)
@@ -28,37 +28,36 @@ func GetSession() *mgo.Session {
 func createDbSession() {
 	var err error
 	session, err = mgo.DialWithInfo(&mgo.DialInfo{
-		Addrs: []string{AppConfig.MongoDBHost},
+		Addrs:    []string{AppConfig.MongoDBHost},
 		Username: AppConfig.DBUser,
 		Password: AppConfig.DBPwd,
-		Timeout: 60 * time.Second,
+		Timeout:  60 * time.Second,
 	})
 	if err != nil {
 		log.Fatalf("[createDbSession]: %s\n", err)
 	}
 }
 
-
 // Add indexes into MongoDB
 func addIndexes() {
 	var err error
-	userIndex := mgo.Index {
-		Key: []string{"email"},
-		Unique: true,
+	userIndex := mgo.Index{
+		Key:        []string{"email"},
+		Unique:     true,
 		Background: true,
-		Sparse: true,
+		Sparse:     true,
 	}
-	taskIndex := mgo.Index {
-		Key: []string{"createdby"},
-		Unique: true,
+	taskIndex := mgo.Index{
+		Key:        []string{"createdby"},
+		Unique:     true,
 		Background: true,
-		Sparse: true,
+		Sparse:     true,
 	}
-	noteIndex := mgo.Index {
-		Key: []string{"taskid"},
-		Unique: true,
+	noteIndex := mgo.Index{
+		Key:        []string{"taskid"},
+		Unique:     true,
 		Background: true,
-		Sparse: true,
+		Sparse:     true,
 	}
 
 	// Add indexes into MongoDB
