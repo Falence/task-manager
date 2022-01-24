@@ -3,9 +3,14 @@ package common
 import (
 	"io/ioutil"
 	"log"
+	"time"
+
+	"github.com/dgrijalva/jwt-go"
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 // Using asymetric crypto/RSA keys
+// location of private/publice key files
 const (
 	// openssl genrsa -out app.rsa 1024
 	privKeyPath = "keys/app.rsa"
@@ -33,3 +38,25 @@ func initKeys() {
 		panic(err)
 	}
 }
+
+// Generate JWT token
+func GenerateJWT(name, role string) (string, error) {
+	// Set claims for JWT token
+	claims := jwt.MapClaims{}
+	claims["iss"] = "admin"
+	claims["exp"] = time.Now().Add(time.Minute * 20).Unix()
+	claims["UserInfo"] = struct {
+		Name string
+		Role string
+	}{name, role}
+
+	// Create a signer for rsa 256
+	// t := jwt.NewWithClaims(jwt.GetSigningMethod("RS256"), claims)
+	t := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
+	tokenString, err := t.SignedString(signKey)
+	if err != nil {
+		return "", err
+	}
+	return tokenString, nil
+}
+
