@@ -71,5 +71,59 @@ func ExtractToken(r *http.Request) string {
 	return ""
 }
 
+// Middleware for validating JWT tokens
+func Authorize(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	tokenFromRequest := ExtractToken(r)
+	// Validate the token
+	token, err := jwt.Parse(tokenFromRequest, func(token *jwt.Token) (interface{}, error) {
+		// Verify the token with public key, which is the counter part of private key
+		return verifyKey, nil
+	})
 
+	if err != nil {
+		switch err.(type) {
+		case *jwt.ValidationError: // JWT validation error
+			vErr := err.(*jwt.ValidationError)
 
+			switch vErr.Errors {
+			case jwt.ValidationErrorExpired: // JWT expired
+				DisplayAppError(
+					w,
+					err,
+					"Access Token is expired, get a new Token!",
+					401,
+				)
+				return
+			
+			default:
+				DisplayAppError(
+					w,
+					err,
+					"Error while parsing the Access Token!",
+					500,
+				)
+				return
+			}
+
+		default:
+			DisplayAppError(
+				w,
+				err,
+				"Error while parsing Access Token!",
+				500,
+			)
+			return
+		}
+	}
+
+	if token.Valid {
+		next(w, r)
+	} else {
+		DisplayAppError(
+			w,
+			err,
+			"Invalid Access Token",
+			401,
+		)
+	}
+}
