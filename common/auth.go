@@ -3,9 +3,10 @@ package common
 import (
 	"io/ioutil"
 	"log"
+	"net/http"
+	"strings"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
@@ -59,4 +60,16 @@ func GenerateJWT(name, role string) (string, error) {
 	}
 	return tokenString, nil
 }
+
+// Extract JWT from request header
+func ExtractToken(r *http.Request) string {
+	bearToken := r.Header.Get("Authorization")
+	strArr := strings.Split(bearToken, " ")
+	if len(strArr) == 2 {
+		return strArr[1]
+	}
+	return ""
+}
+
+
 
