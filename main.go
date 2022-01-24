@@ -18,6 +18,7 @@ func main() {
 	n := negroni.Classic()
 	n.UseHandler(router)
 
+	// Create HTTP server
 	server := &http.Server{
 		Addr:    common.AppConfig.Server,
 		Handler: n,
