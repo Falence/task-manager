@@ -39,7 +39,15 @@ func (r *TaskRepository) Delete(id string) error {
 	return err
 }
 
-func (r *TaskRepository) GetAll() []models.Task {}
+func (r *TaskRepository) GetAll() []models.Task {
+	var tasks []models.Task
+	iter := r.C.Find(nil).Iter()
+	result := models.Task{}
+	for iter.Next(&result) {
+		tasks = append(tasks, result)
+	}
+	return tasks
+}
 
 func (r *TaskRepository) GetById(id string) (task models.Task, err error) {}
 
