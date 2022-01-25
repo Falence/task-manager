@@ -184,3 +184,28 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNoContent)
 	}
 }
+
+// Handler for HTTP Delete - "/tasks/{id}"
+// Delete an existing Task document
+func DeleteTask(w http.ResponseWriter, r * http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	context := NewContext()
+	defer context.Close()
+	c := context.DbCollection("tasks")
+	repo := &data.TaskRepository{C: c}
+
+	// Delete an existing Task document
+	err := repo.Delete(id)
+	if err != nil {
+		common.DisplayAppError(
+			w,
+			err,
+			"An unexpected error has occurred",
+			500,
+		)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
