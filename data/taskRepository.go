@@ -12,7 +12,14 @@ type TaskRepository struct {
 	C *mgo.Collection
 }
 
-func (r *TaskRepository) Create(task *models.Task) error {}
+func (r *TaskRepository) Create(task *models.Task) error {
+	obj_id := bson.NewObjectId()
+	task.Id = obj_id
+	task.CreatedOn = time.Now()
+	task.Status = "Created"
+	err := r.C.Insert(&task)
+	return err
+}
 
 func (r *TaskRepository) Update(task *models.Task) error {}
 
