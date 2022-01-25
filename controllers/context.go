@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"gopkg.in/mgo.v2"
 	"github.com/falence/taskmanager/common"
+	"gopkg.in/mgo.v2"
 )
 
 // Struct used for maitaining HTTP Request Context
