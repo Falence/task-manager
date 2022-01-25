@@ -4,6 +4,9 @@ import (
 	"github.com/falence/taskmanager/models"
 )
 
+// MODELS FOR JSON RESOURCES
+
+// For User
 type (
 	// For Post - /user/register
 	UserResource struct {
@@ -30,5 +33,18 @@ type (
 	AuthUserModel struct {
 		User  models.User `json:"user"`
 		Token string      `json:"token"`
+	}
+)
+
+// For Tasks
+type (
+	// For Post/Put - /tasks
+	// For Get - /task/id
+	TaskResource struct {
+		Data models.Task `json:"data"`
+	}
+	// For Get - /tasks
+	TasksResource struct {
+		Data []models.Task `json:"data"`
 	}
 )

@@ -29,7 +29,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	context := NewContext()
 	defer context.Close()
 	c := context.DbCollection("users")
-	repo := &data.UserRepository{c}
+	repo := &data.UserRepository{C: c}
 
 	// Insert User document
 	repo.CreateUser(user)
@@ -75,7 +75,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	context := NewContext()
 	defer context.Close()
 	c := context.DbCollection("users")
-	repo := &data.UserRepository{c}
+	repo := &data.UserRepository{C: c}
 
 	// Authenticate the login user
 	if user, err := repo.Login(loginUser); err != nil {
