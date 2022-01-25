@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/falence/taskmanager/common"
@@ -58,7 +57,7 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 	c := context.DbCollection("tasks")
 	repo := &data.TaskRepository{C: c}
 	tasks := repo.GetAll()
-	j, err := json.Marshal(TaskResource{Data: tasks})
+	j, err := json.Marshal(TasksResource{Data: tasks})
 	if err != nil {
 		common.DisplayAppError(
 			w,
@@ -75,7 +74,7 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 
 // Handler for HTTP Get - "/tasks/{id}"
 // Returns a single Task document by id
-func GetTaskByID(w http.ResponseWriter, r *http.Request){
+func GetTaskByID(w http.ResponseWriter, r *http.Request) {
 	// Get id from the incoming url
 	vars := mux.Vars(r)
 	id := vars["id"]
@@ -129,7 +128,7 @@ func GetTasksByUser(w http.ResponseWriter, r *http.Request) {
 	repo := &data.TaskRepository{C: c}
 
 	tasks := repo.GetByUser(user)
-	j, err := json.Marshal(TaskResource{Data: tasks})
+	j, err := json.Marshal(TasksResource{Data: tasks})
 	if err != nil {
 		common.DisplayAppError(
 			w,
@@ -187,7 +186,7 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 
 // Handler for HTTP Delete - "/tasks/{id}"
 // Delete an existing Task document
-func DeleteTask(w http.ResponseWriter, r * http.Request) {
+func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
