@@ -21,13 +21,25 @@ func (r *TaskRepository) Create(task *models.Task) error {
 	return err
 }
 
-func (r *TaskRepository) Update(task *models.Task) error {}
+func (r *TaskRepository) Update(task *models.Task) error {
+	// Partial update on mongodb
+	err := r.C.Update(bson.M{"_id": task.Id},
+		bson.M{"$set": bson.M{
+			"name":        task.Name,
+			"description": task.Description,
+			"due":         task.Due,
+			"status":      task.Status,
+			"tags":        task.Tags,
+		}})
+	return err
+}
 
-func (r *TaskRepository) Delete(id string) error {}
+func (r *TaskRepository) Delete(id string) error {
+	
+}
 
 func (r *TaskRepository) GetAll() []models.Task {}
 
 func (r *TaskRepository) GetById(id string) (task models.Task, err error) {}
 
 func (r *TaskRepository) GetByUser(user string) []models.Task {}
-
