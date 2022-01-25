@@ -34,7 +34,10 @@ func (r *TaskRepository) Update(task *models.Task) error {
 	return err
 }
 
-
+func (r *TaskRepository) Delete(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
 
 func (r *TaskRepository) GetAll() []models.Task {}
 
