@@ -115,3 +115,31 @@ func GetTaskByID(w http.ResponseWriter, r *http.Request){
 		w.Write(j)
 	}
 }
+
+// Handler for HTTP Get - "/tasks/users/{id}"
+// Return all tasks created by a User
+func GetTasksByUser(w http.ResponseWriter, r *http.Request) {
+	// Get id from the incoming url
+	vars := mux.Vars(r)
+	user := vars["id"]
+
+	context := NewContext()
+	defer context.Close()
+	c := context.DbCollection("tasks")
+	repo := &data.TaskRepository{C: c}
+
+	tasks := repo.GetByUser(user)
+	j, err := json.Marshal(TaskResource{Data: tasks})
+	if err != nil {
+		common.DisplayAppError(
+			w,
+			err,
+			"An unexpected error has occurred",
+			500,
+		)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(j)
+}
