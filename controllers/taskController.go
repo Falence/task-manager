@@ -73,3 +73,45 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
+// Handler for HTTP Get - "/tasks/{id}"
+// Returns a single Task document by id
+func GetTaskByID(w http.ResponseWriter, r *http.Request){
+	// Get id from the incoming url
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	context := NewContext()
+	defer context.Close()
+	c := context.DbCollection("tasks")
+	repo := &data.TaskRepository{C: c}
+
+	task, err := repo.GetById(id)
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		} else {
+			common.DisplayAppError(
+				w,
+				err,
+				"An unexpected error has occurred",
+				500,
+			)
+			return
+		}
+	}
+
+	if j, err := json.Marshal(task); err != nil {
+		common.DisplayAppError(
+			w,
+			err,
+			"An unexpected error has occurred",
+			500,
+		)
+		return
+	} else {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(j)
+	}
+}
