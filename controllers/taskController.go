@@ -143,3 +143,44 @@ func GetTasksByUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(j)
 }
+
+// Handler for HTTP Put - "/tasks/{id}"
+// Update an existing Task document
+func UpdateTask(w http.ResponseWriter, r *http.Request) {
+	// Get id from the incoming url
+	vars := mux.Vars(r)
+	id := bson.ObjectIdHex(vars["id"])
+
+	// Decode the incoming Task json
+	var dataResource TaskResource
+	err := json.NewDecoder(r.Body).Decode(&dataResource)
+	if err != nil {
+		common.DisplayAppError(
+			w,
+			err,
+			"Invalid Task data",
+			500,
+		)
+		return
+	}
+
+	task := &dataResource.Data
+	task.Id = id
+	context := NewContext()
+	defer context.Close()
+	c := context.DbCollection("tasks")
+	repo := &data.TaskRepository{C: c}
+
+	// Update an existing Task document
+	if err := repo.Update(task); err != nil {
+		common.DisplayAppError(
+			w,
+			err,
+			"An unexpected error has occurred",
+			500,
+		)
+		return
+	} else {
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
