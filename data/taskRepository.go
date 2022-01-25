@@ -49,6 +49,9 @@ func (r *TaskRepository) GetAll() []models.Task {
 	return tasks
 }
 
-func (r *TaskRepository) GetById(id string) (task models.Task, err error) {}
+func (r *TaskRepository) GetById(id string) (task models.Task, err error) {
+	err = r.C.FindId(bson.ObjectIdHex(id)).One(&task)
+	return
+}
 
 func (r *TaskRepository) GetByUser(user string) []models.Task {}
