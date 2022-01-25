@@ -1,0 +1,26 @@
+package data
+
+import (
+	"github.com/falence/taskmanager/models"
+	"golang.org/x/crypto/bcrypt"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+)
+
+type UserRepository struct {
+	C *mgo.Collection
+}
+
+func (r *UserRepository) CreateUser(user *models.User) error {
+	obj_id := bson.NewObjectId()
+	user.Id = obj_id
+	hpass, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		panic(err)
+	}
+	user.HashPassword = hpass
+	// Clear the incoming text password
+	user.Password = ""
+	err = r.C.Insert(&user)
+	return err
+}
