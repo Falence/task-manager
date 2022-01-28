@@ -74,7 +74,7 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 
 // Handler for HTTP Get - "/tasks/{id}"
 // Returns a single Task document by id
-func GetTaskByID(w http.ResponseWriter, r *http.Request) {
+func GetTaskById(w http.ResponseWriter, r *http.Request) {
 	// Get id from the incoming url
 	vars := mux.Vars(r)
 	id := vars["id"]

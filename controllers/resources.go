@@ -48,3 +48,21 @@ type (
 		Data []models.Task `json:"data"`
 	}
 )
+
+// For Notes
+type (
+	// For Post/Put - /notes
+	NoteResource struct {
+		Data NoteModel `json:"data"`
+	}
+	// For Get - /notes
+	// For /notes/tasks/id
+	NotesResource struct {
+		Data []models.TaskNote `json:"data"`
+	}
+	// Model for a TaskNote
+	NoteModel struct {
+		TaskId string `json:"taskid"`
+		Description string `json:"description"`
+	}
+)
